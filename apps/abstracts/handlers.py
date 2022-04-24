@@ -8,17 +8,18 @@ from abstracts.mixins import HttpResponseMixin
 
 
 class ViewHandler(HttpResponseMixin):
-
-    template_login_page: str = 'university/login.html'
+    """Handler for validating request and generating response."""
 
     def get_validated_response(
         self,
         request: WSGIRequest
     ) -> Optional[HttpResponse]:
+        """Get validated response."""
+
         if request.user.is_authenticated:
             return None
 
         return self.get_http_response(
             request,
-            self.template_login_page
+            'university/user_login.html'
         )

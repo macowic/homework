@@ -1,0 +1,59 @@
+{% extends 'university/base.html' %}
+{% block ctx_title %}Все файлы{% endblock %}
+{% block files_active %}active{% endblock %}
+{% block body %}
+
+<div class="container-fluid files-container">
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" {% if filter_by == 'all' %}class="active"{% endif %}><a href="{% url 'page_homework_files' 'all' %}">ВСЕ</a></li>
+                <li role="presentation" {% if filter_by == 'checked' %}class="active"{% endif %}><a href="{% url 'page_homework_files' 'checked' %}">Проверенные</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Заголовок</th>
+                                <th>Пользователь</th>
+                                <th>Файл</th>
+                                <th>Домашняя работа</th>
+                                <th>Проверен ли</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in ctx_files %}
+                                <tr>
+                                    <td>{{ file.title }}</td>
+                                    <td>{{ file.homework.user.email }}</td>
+                                    <td>
+                                        <a target="_blank" href="{{ file.obj.url }}">
+                                            <button type="button" class="btn btn-success btn-xs">
+                                                <span class="glyphicon glyphicon-eye-open"></span>&nbsp; Просмотр
+                                            </button>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'page_homework_detail' file.homework.id %}">
+                                            <img src="{{ file.homework.logo.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;" />
+                                        </a>
+                                        <a href="{% url 'page_homework_detail' file.homework.id %}">{{ file.homework.title }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'page_homework_files_check' file.id %}" class="btn-checked"><span class="glyphicon glyphicon-ok {% if file.is_checked %}active{% endif %}"></span></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

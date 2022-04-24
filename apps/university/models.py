@@ -2,7 +2,6 @@ from datetime import datetime
 
 from django.db import models
 from django.db.models import QuerySet
-from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from abstracts.models import AbstractDateTime
@@ -167,22 +166,42 @@ class HomeworkQuerySet(QuerySet):
 
 
 class Homework(AbstractDateTime):
-    user = models.ForeignKey(
-        CustomUser, on_delete=models.PROTECT
+
+    IMAGE_TYPES = (
+        'png',
+        'jpg',
+        'jpeg',
     )
-    title = models.CharField(max_length=100)
-    subject = models.CharField(max_length=50)
+    user = models.ForeignKey(
+        CustomUser,
+        verbose_name='загрузчик',
+        on_delete=models.PROTECT
+    )
+    title = models.CharField(
+        verbose_name='заголовок',
+        max_length=100
+    )
+    subject = models.CharField(
+        verbose_name='топик',
+        max_length=50
+    )
     logo = models.ImageField(
-        'Лого домашней работы',
+        verbose_name='лого',
         upload_to='homework/',
         max_length=255
     )
-    is_checked = models.BooleanField(default=False)
-
     objects = HomeworkQuerySet().as_manager()
 
     def __str__(self) -> str:
         return f'{self.subject} | {self.title}'
+
+    @property
+    def is_checked(self) -> bool:
+        return all(
+            self.files.values_list(
+                'is_checked', flat=True
+            )
+        )
 
     class Meta:
         ordering = (
@@ -201,16 +220,30 @@ class FileQuerySet(QuerySet):
 
 
 class File(AbstractDateTime):
-    homework = models.ForeignKey(
-        Homework, on_delete=models.PROTECT
+
+    FILE_TYPES = (
+        'txt',
+        'pdf',
     )
-    title = models.CharField(max_length=100)
+    homework = models.ForeignKey(
+        Homework,
+        verbose_name='домашняя работа',
+        related_name='files',
+        on_delete=models.CASCADE
+    )
+    title = models.CharField(
+        verbose_name='заголовок',
+        max_length=100
+    )
     obj = models.FileField(
-        'Объект файла',
+        verbose_name='объект файла',
         upload_to='homework_files/%Y/%m/%d/',
         max_length=255
     )
-
+    is_checked = models.BooleanField(
+        verbose_name='проверен ли',
+        default=False
+    )
     objects = FileQuerySet().as_manager()
 
     def __str__(self) -> str:

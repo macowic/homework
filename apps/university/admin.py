@@ -137,7 +137,6 @@ class HomeworkAdmin(admin.ModelAdmin):
     ) -> tuple:
         if obj:
             return self.readonly_fields + (
-                'user',
                 'title',
                 'subject',
                 'logo',
@@ -151,21 +150,21 @@ class FileAdmin(admin.ModelAdmin):
         'datetime_created',
         'datetime_updated',
         'datetime_deleted',
-        'title',
-        'obj',
     )
     def get_readonly_fields(
         self,
         request: WSGIRequest,
         obj: Optional[Student] = None
     ) -> tuple:
-        if obj:
-            return self.readonly_fields + (
-                'homework',
-                'title',
-                'obj',
-            )
-        return self.readonly_fields
+        if not obj:
+            return self.readonly_fields
+
+        return self.readonly_fields + (
+            'homework',
+            'title',
+            'obj',
+            'is_checked',
+        )
 
 
 # admin.site.unregister(

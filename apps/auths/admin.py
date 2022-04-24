@@ -33,7 +33,7 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
     # NOTE: Used to define the fields that
-    #       will be displayed on the create-user page
+    # will be displayed on the create-user page
     #
     add_fieldsets = (
         (None, {

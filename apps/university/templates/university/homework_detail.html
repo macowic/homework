@@ -1,0 +1,82 @@
+{% extends 'university/base.html' %}
+{% block title %}{{ ctx_homework.title }}{% endblock %}
+{% block homeworks_active %}active{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid files-container">
+    <div class="row">
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <a href="{% url 'page_homework_detail' ctx_homework.id %}">
+                        {% if ctx_homework.logo %}
+                            <img src="{{ ctx_homework.logo.url }}" class="img-responsive">
+                        {% else %}
+                            <h3>None</h3>
+                        {% endif %}
+                    </a>
+                    <h1>{{ ctx_homework.title }} <small>{{ ctx_homework.subject }}</small></h1>
+                    <h2>{{ ctx_homework.user.email }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-8 col-md-9">
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" class="active"><a href="{% url 'page_homework_detail' ctx_homework.id %}">ВСЕ</a></li>
+                <li role="presentation"><a href="{% url 'page_homework_files_create' ctx_homework.id %}">Загрузить новый файл</a></li>
+            </ul>
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <h3>ВСЕ файлы</h3>
+
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Заголовок</th>
+                            <th>Объект</th>
+                            <th>Проверен ли</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for file in ctx_homework.files.get_not_deleted %}
+                            <tr>
+                                <td>{{ file.title }}</td>
+                                <td>
+                                    <a target="_blank" href="{{ file.obj.url }}">
+                                        <button type="button" class="btn btn-success btn-xs">
+                                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp; Просмотр
+                                        </button>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'page_homework_files_check' file.id %}" class="btn-checked"><span class="glyphicon glyphicon-ok {% if file.is_checked %}active{% endif %}"></span></a>
+                                </td>
+                                <td>
+                                    <form action="{% url 'page_homework_files_delete' file.id %}" method="post" style="display: inline;">
+
+                                        {% csrf_token %}
+
+                                        <input type="hidden" name="file_id" value="{{ file.id }}" />
+                                        <button type="submit" class="btn btn-danger btn-xs">
+                                            <span class="glyphicon glyphicon-remove"></span>&nbsp; Удалить
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

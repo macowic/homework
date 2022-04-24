@@ -4,51 +4,49 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Заголовок{% endblock %}</title>
-    <link rel="shortcut icon" type="image/png" href="{%  static 'favicon.ico' %}"/>
+    <title>{% block ctx_title %}Главная{% endblock %}</title>
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="{% static 'music/style.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'university/css/style.css' %}"/>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
-    <script src="{% static 'music/js/main.js' %}"></script>
+    <script src="{% static 'university/js/main.js' %}"></script>
 </head>
 <body>
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
 
-        <!-- Header -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'music:index' %}"></a>
+            <a class="navbar-brand" href="{% url 'page_main' %}"></a>
         </div>
 
-        <!-- Items -->
         <div class="collapse navbar-collapse" id="topNavBar">
             <ul class="nav navbar-nav">
-                <li class="{% block albums_active %}{% endblock %}"><a href="{% url 'music:index' %}"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span>&nbsp; Albums</a></li>
-                <li class="{% block songs_active %}{% endblock %}"><a href="{% url 'music:songs' 'all' %}"><span class="glyphicon glyphicon-music" aria-hidden="true"></span>&nbsp; Songs</a></li>
+                <li class="{% block homeworks_active %}{% endblock %}"><a href="{% url 'page_main' %}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp; Домашние работы</a></li>
+                <li class="{% block files_active %}{% endblock %}"><a href="{% url 'page_homework_files' 'all' %}"><span class="glyphicon glyphicon-file" aria-hidden="true"></span>&nbsp; Файлы</a></li>
             </ul>
-            <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'music:index' %}">
+            <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'page_main' %}">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
+                    <input type="text" class="form-control" name="query" value="{{ request.GET.query }}">
                 </div>
-                <button type="submit" class="btn btn-default">Search</button>
+                <button type="submit" class="btn btn-default">Поиск</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="{% url 'music:create_album' %}">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Album
+                    <a href="{% url 'page_homework_create' %}">
+                        <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>&nbsp; Загрузить домашнюю работу
                     </a>
                 </li>
                 <li>
-                    <a href="{% url 'music:logout_user' %}">
-                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout
+                    <a href="{% url 'page_logout' %}">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp; Выйти
                     </a>
                 </li>
             </ul>
