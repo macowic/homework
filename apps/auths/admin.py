@@ -4,16 +4,10 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.core.handlers.wsgi import WSGIRequest
 
-from auths.forms import (
-    CustomUserCreationForm,
-    CustomUserChangeForm,
-)
 from auths.models import CustomUser
 
 
 class CustomUserAdmin(UserAdmin):
-    add_form = CustomUserCreationForm
-    form = CustomUserChangeForm
     model = CustomUser
 
     fieldsets = (
@@ -33,7 +27,7 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
     # NOTE: Used to define the fields that
-    # will be displayed on the create-user page
+    #       will be displayed on the create-user page
     #
     add_fieldsets = (
         (None, {
